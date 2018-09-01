@@ -13,7 +13,8 @@ class App extends Component {
 		this.state = {
 			messages: [],
 			joinableRooms: [],
-			joinedRooms: []
+			joinedRooms: [],
+			roomId: null
 		};
 	}
 
@@ -27,42 +28,53 @@ class App extends Component {
 			.connect()
 			.then(currentUser => {
 				this.currentUser = currentUser;
-
-				this.currentUser
-					.getJoinableRooms()
-					.then(joinableRooms =>
-						this.setState({
-							joinableRooms,
-							joinedRooms: this.currentUser.rooms
-						})
-					)
-					.catch(error => console.log("failed to fetch joined rooms", error));
-					this.subscribeToRoom();
+				this.getRooms();
 			})
 			.catch(error => console.log("failed to connect to service", error));
 	}
 
-	subscribeToRoom = () => {
-		this.currentUser.subscribeToRoom({
-			roomId: 15134393,
-			hooks: {
-				onNewMessage: message => {
-					this.setState({ messages: [...this.state.messages, message] });
+	getRooms = () => {
+		this.currentUser
+			.getJoinableRooms()
+			.then(joinableRooms =>
+				this.setState({
+					joinableRooms,
+					joinedRooms: this.currentUser.rooms
+				})
+			)
+			.catch(error => console.log("Failed To Fetch Joined Rooms", error));
+	};
+	subscribeToRoom = roomId => {
+		this.setState({ messages: [] });
+		this.currentUser
+			.subscribeToRoom({
+				roomId,
+				hooks: {
+					onNewMessage: message => {
+						this.setState({ messages: [...this.state.messages, message] });
+					}
 				}
-			}
-		});
-	}
+			})
+			.then(room => {
+				this.setState({ roomId: room.id });
+				this.getRooms();
+			})
+			.catch(error => console.log("Failed To Get Rooms", error));
+	};
 	sendMessage = text => {
 		this.currentUser.sendMessage({
 			text,
-			roomId: 15134393
+			roomId: this.state.roomId
 		});
 	};
 
 	render() {
 		return (
 			<div className="App">
-				<RoomList rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}/>
+				<RoomList
+					rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
+					subscribeToRoom={this.subscribeToRoom}
+				/>
 				<MessageList messages={this.state.messages} />
 				<SendMessageForm sendMessage={this.sendMessage} />
 				<NewRoomForm />
