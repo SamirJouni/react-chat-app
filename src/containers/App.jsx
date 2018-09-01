@@ -37,18 +37,21 @@ class App extends Component {
 						})
 					)
 					.catch(error => console.log("failed to fetch joined rooms", error));
-				currentUser.subscribeToRoom({
-					roomId: 15134393,
-					hooks: {
-						onNewMessage: message => {
-							this.setState({ messages: [...this.state.messages, message] });
-						}
-					}
-				});
+					this.subscribeToRoom();
 			})
 			.catch(error => console.log("failed to connect to service", error));
 	}
 
+	subscribeToRoom = () => {
+		this.currentUser.subscribeToRoom({
+			roomId: 15134393,
+			hooks: {
+				onNewMessage: message => {
+					this.setState({ messages: [...this.state.messages, message] });
+				}
+			}
+		});
+	}
 	sendMessage = text => {
 		this.currentUser.sendMessage({
 			text,
