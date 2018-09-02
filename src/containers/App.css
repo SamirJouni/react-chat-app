@@ -1,0 +1,25 @@
+.app {
+	display: grid;
+	height: 100%;
+	grid-template-columns: repeat(6, 1fr);
+	grid-template-rows: repeat(5, 1fr) 3.75rem;
+	grid-template-areas:
+			"r m m m m m"
+			"r m m m m m"
+			"r m m m m m"
+			"r m m m m m"
+			"r m m m m m"
+			"n f f f f f"
+}
+.new-room-form {
+	grid-area: n;
+}
+.room-list {
+	grid-area: r;
+}
+.message-list {
+	grid-area: m;
+}
+.send-message-form {
+	grid-area: f;
+}

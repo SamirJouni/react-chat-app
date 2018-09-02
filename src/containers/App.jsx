@@ -79,7 +79,7 @@ class App extends Component {
 
 	render() {
 		return (
-			<div className="App">
+			<div className="app">
 				<RoomList
 					roomId={this.state.roomId}
 					rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
