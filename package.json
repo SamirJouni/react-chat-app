@@ -5,8 +5,8 @@
   "homepage": "./",
   "dependencies": {
     "@pusher/chatkit": "^0.7.18",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
+    "react": "^16.8.5",
+    "react-dom": "^16.8.5",
     "react-scripts": "2.1.8"
   },
   "scripts": {
